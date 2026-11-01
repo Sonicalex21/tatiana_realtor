@@ -69,10 +69,15 @@ body {
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
+  padding-top: 84px;
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+section[id] {
+  scroll-margin-top: 96px;
 }
 
 p, h1, h2, h3, h4, h5, h6, span, a, li, button {
@@ -110,9 +115,10 @@ button {
    ШАПКА САЙТА (HEADER & NAV)
    ========================================================================== */
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.95);
@@ -2224,7 +2230,12 @@ button {
   }
 
   body {
+    padding-top: 64px;
     padding-bottom: 74px;
+  }
+
+  section[id] {
+    scroll-margin-top: 72px;
   }
 }
 
