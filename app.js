@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 8. Умное скрытие плавающей панели связи (при скролле вниз и бездействии 1.5 сек)
   initFloatingBarBehavior();
+
+  // 9. Автоматическая оранжевая подсветка карточки при свайпе/перелистывании («Услуги» и «Инженерный подход»)
+  initHorizontalSwipeHighlight();
 });
 
 /**
@@ -506,4 +509,87 @@ function initFloatingBarBehavior() {
 
   // Запуск таймера при старте страницы
   resetIdleTimer();
+}
+
+/**
+ * Автоматическая подсветка активной карточки оранжевой рамкой при свайпе/перелистывании в секциях «Услуги» и «Инженерный подход»
+ */
+function initHorizontalSwipeHighlight() {
+  const setupCarousel = (gridSelector, cardSelector, activeClass) => {
+    const container = document.querySelector(gridSelector);
+    if (!container) return;
+    const cards = container.querySelectorAll(cardSelector);
+    if (!cards.length) return;
+
+    let isTicking = false;
+
+    function updateActiveCard() {
+      isTicking = false;
+      // Если на десктопе контейнер не скроллится — убираем принудительный active-service
+      if (container.scrollWidth <= container.clientWidth + 10) {
+        cards.forEach(c => c.classList.remove(activeClass));
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+
+      let closestCard = null;
+      let minDistance = Infinity;
+
+      cards.forEach(card => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const dist = Math.abs(containerCenter - cardCenter);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestCard = card;
+        }
+      });
+
+      cards.forEach(card => {
+        if (card === closestCard) {
+          card.classList.add(activeClass);
+        } else {
+          card.classList.remove(activeClass);
+        }
+      });
+    }
+
+    container.addEventListener('scroll', () => {
+      if (!isTicking) {
+        window.requestAnimationFrame(updateActiveCard);
+        isTicking = true;
+      }
+    }, { passive: true });
+
+    // Клик/тап по карточке центрирует её и подсвечивает оранжевым
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        if (container.scrollWidth > container.clientWidth + 10) {
+          cards.forEach(c => c.classList.remove(activeClass));
+          card.classList.add(activeClass);
+          card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+      });
+    });
+
+    // Первоначальное выставление первой видимой карточки
+    updateActiveCard();
+    setTimeout(updateActiveCard, 150);
+
+    // При изменении ориентации или размера экрана
+    window.addEventListener('resize', () => {
+      if (!isTicking) {
+        window.requestAnimationFrame(updateActiveCard);
+        isTicking = true;
+      }
+    }, { passive: true });
+  };
+
+  // 1. «Услуги риелтора»
+  setupCarousel('.services-grid', '.service-card', 'active-service');
+
+  // 2. «Инженерный подход»
+  setupCarousel('.engineering-cards-grid', '.eng-card', 'active-eng');
 }

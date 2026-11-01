@@ -871,17 +871,18 @@ button {
   background: var(--color-white);
   border-radius: var(--radius-lg);
   padding: 34px 28px;
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-border);
   box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, transform 0.25s ease;
   display: flex;
   flex-direction: column;
 }
 
-.service-card:hover {
+.service-card:hover,
+.service-card.active-service {
   transform: translateY(-4px);
   border-color: var(--color-orange);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 10px 24px rgba(235, 90, 20, 0.2);
 }
 
 .service-icon-box {
@@ -894,6 +895,12 @@ button {
   justify-content: center;
   margin-bottom: 20px;
   flex-shrink: 0;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.service-card.active-service .service-icon-box {
+  background: rgba(235, 90, 20, 0.16);
+  transform: scale(1.05);
 }
 
 .service-icon-box svg {
@@ -1053,20 +1060,22 @@ button {
 }
 
 .type-pills-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  flex-wrap: wrap;
 }
 
 .type-pill-btn {
-  padding: 10px 20px;
+  padding: 11px 16px;
   border-radius: var(--radius-full);
   border: 1px solid var(--color-border);
   background: var(--color-bg);
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 600;
   color: var(--color-text);
   transition: var(--transition);
+  text-align: center;
+  cursor: pointer;
 }
 
 .type-pill-btn.active, .type-pill-btn:hover {
@@ -1856,6 +1865,13 @@ button {
     gap: 8px;
   }
 
+  /* Карточки «Инженерный подход» — активное состояние при свайпе на тёмном фоне */
+  .eng-card.active-eng {
+    border-color: var(--color-orange) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 24px rgba(235, 90, 20, 0.35) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+
   /* Секция «Услуги» — горизонтальный свайп-слайдер (snap-scroll) */
   .services-grid {
     display: flex;
@@ -1863,7 +1879,7 @@ button {
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     gap: 12px;
-    padding: 6px 16px 16px 16px;
+    padding: 6px 16px 18px 16px;
     margin: 0 -16px;
     scrollbar-width: none;
   }
@@ -1878,6 +1894,26 @@ button {
     scroll-snap-align: center;
     padding: 18px 16px;
     border-radius: 16px;
+    border: 1.5px solid var(--color-border);
+    transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, transform 0.22s ease;
+  }
+
+  /* Автоматическая оранжевая рамка и свечение при перелистывании карточки в центр */
+  .service-card.active-service {
+    border-color: var(--color-orange) !important;
+    box-shadow: 0 10px 24px rgba(235, 90, 20, 0.24) !important;
+    background: linear-gradient(145deg, #ffffff 0%, #fff7f2 100%) !important;
+    transform: translateY(-2px);
+  }
+
+  .service-card.active-service .service-icon-box {
+    background: rgba(235, 90, 20, 0.16);
+    transform: scale(1.05);
+  }
+
+  .service-card.highlight:not(.active-service) {
+    border-color: var(--color-border);
+    background: var(--color-white);
   }
 
   .service-card-title,
@@ -1951,82 +1987,195 @@ button {
     line-height: 1.35;
   }
 
-  /* Форма заявки */
-  .lead-form-wrapper {
+  /* Компактная форма заявки */
+  .form-wrapper-box {
     border-radius: 18px;
     margin: 0;
   }
 
   .form-header-banner {
-    padding: 22px 16px;
+    padding: 16px 14px;
   }
 
   .form-header-banner h3 {
-    font-size: 19px;
+    font-size: 17.5px;
     line-height: 1.25;
+    margin-bottom: 4px;
   }
 
   .form-header-banner p {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.35;
   }
 
   .lead-form-content {
-    padding: 22px 16px;
+    padding: 16px 14px;
+  }
+
+  .form-group-type {
+    margin-bottom: 12px;
   }
 
   .type-pills-row {
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
   }
 
   .type-pill-btn {
-    padding: 8px 12px;
+    padding: 8px 4px;
     font-size: 12.5px;
-    flex: 1 1 calc(50% - 8px);
     text-align: center;
+    border-radius: 10px;
+    flex: none;
   }
 
   .form-row-2col {
     grid-template-columns: 1fr;
-    gap: 14px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
   .form-group {
-    margin-bottom: 14px;
+    margin-bottom: 8px;
   }
 
-  .form-input,
-  .form-textarea {
-    padding: 12px 14px;
-    font-size: 14.5px;
+  .form-label {
+    font-size: 12px;
+    margin-bottom: 4px;
   }
 
-  .btn-submit-lead {
-    padding: 15px 18px;
-    font-size: 15px;
+  .form-input {
+    padding: 10px 12px;
+    font-size: 13.5px;
+    border-radius: 10px;
   }
 
   .form-policy-check {
-    font-size: 11.5px;
-    margin-bottom: 20px;
+    font-size: 11px;
+    line-height: 1.35;
+    margin-bottom: 14px;
+    gap: 6px;
   }
 
-  /* Подвал */
+  .form-policy-check input {
+    margin-top: 1px;
+  }
+
+  .btn-submit-lead {
+    padding: 13px 18px;
+    font-size: 14.5px;
+    border-radius: 12px;
+  }
+
+  .direct-connect-options {
+    margin-top: 14px;
+    padding-top: 12px;
+  }
+
+  .direct-connect-options p {
+    font-size: 11.5px;
+    margin-bottom: 8px;
+  }
+
+  .direct-buttons-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .direct-btn {
+    padding: 8px 4px;
+    font-size: 11px;
+    justify-content: center;
+    border-radius: 8px;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .direct-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  /* Подвал — уменьшенный компактный размер шрифтов и отступов */
   .site-footer {
-    padding: 40px 0 20px 0;
+    padding: 24px 0 14px 0;
+    border-top-width: 3px;
   }
 
   .footer-top-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
+    margin-bottom: 16px;
     text-align: left;
+  }
+
+  .footer-brand h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-white);
+    margin-bottom: 3px;
+    letter-spacing: 0.2px;
+  }
+
+  .footer-brand p {
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: #94a3b8;
+    margin-bottom: 6px;
+  }
+
+  .footer-slogan {
+    font-size: 16.5px;
+    margin-bottom: 0;
+    color: #ff914d;
+  }
+
+  .footer-contacts-col h5,
+  .footer-social-col h5 {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    color: #cbd5e1;
+  }
+
+  .footer-phone-big {
+    font-size: 15.5px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .footer-city-info {
+    font-size: 10.5px;
+    line-height: 1.35;
+    color: #94a3b8;
+  }
+
+  .footer-social-links {
+    gap: 8px;
+  }
+
+  .footer-social-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .footer-social-btn svg {
+    width: 15px;
+    height: 15px;
   }
 
   .footer-bottom-bar {
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     text-align: center;
-    padding-top: 18px;
+    padding-top: 12px;
+    font-size: 10px;
+    color: #64748b;
   }
 
   /* Плавающая нижняя панель на мобильных */

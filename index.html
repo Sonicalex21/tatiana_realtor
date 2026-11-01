@@ -460,20 +460,20 @@
       <div class="form-wrapper-box">
         
         <div class="form-header-banner">
-          <h3>Подберём недвижимость с вниманием к каждой детали</h3>
-          <p>Расскажите, какая недвижимость Вас интересует, и я помогу разобраться с дальнейшими шагами.</p>
+          <h3>Быстрая заявка риелтору</h3>
+          <p>Оставьте номер — перезвоню в течение 15 минут и отвечу на все вопросы</p>
         </div>
 
         <div class="lead-form-content">
           <form id="lead-request-form" novalidate>
             
-            <!-- Выбор типа услуги -->
+            <!-- Выбор типа услуги в 1 аккуратную строку -->
             <div class="form-group-type">
-              <label class="form-label">Что Вас интересует?</label>
+              <label class="form-label">Интересует:</label>
               <div class="type-pills-row">
-                <button type="button" class="type-pill-btn active" data-type="Покупка недвижимости">Покупка жилья</button>
-                <button type="button" class="type-pill-btn" data-type="Продажа недвижимости">Продажа жилья</button>
-                <button type="button" class="type-pill-btn" data-type="Консультация">Консультация эксперта</button>
+                <button type="button" class="type-pill-btn active" data-type="Покупка недвижимости">Покупка</button>
+                <button type="button" class="type-pill-btn" data-type="Продажа недвижимости">Продажа</button>
+                <button type="button" class="type-pill-btn" data-type="Консультация">Консультация</button>
               </div>
               <input type="hidden" id="selected-service-type" name="service_type" value="Покупка недвижимости">
             </div>
@@ -491,16 +491,16 @@
               </div>
             </div>
 
-            <!-- Комментарий -->
+            <!-- Компактное поле пожеланий вместо громоздкого textarea -->
             <div class="form-group">
-              <label for="client-comment" class="form-label">Комментарий или параметры объекта</label>
-              <textarea id="client-comment" class="form-textarea" placeholder="Количество комнат, желаемый район, бюджет или любые вопросы..."></textarea>
+              <label for="client-comment" class="form-label">Пожелания или вопрос (необязательно)</label>
+              <input type="text" id="client-comment" class="form-input" placeholder="Район, бюджет или параметры объекта...">
             </div>
 
             <!-- Чекбокс политики -->
             <div class="form-policy-check">
               <input type="checkbox" id="policy-check" checked required>
-              <label for="policy-check">Согласен(на) на обработку персональных данных для обратной связи</label>
+              <label for="policy-check">Согласен(на) на обработку персональных данных для связи</label>
             </div>
 
             <!-- Кнопка отправки -->
@@ -512,21 +512,21 @@
 
           <!-- Прямые каналы для связи без формы -->
           <div class="direct-connect-options">
-            <p>Или свяжитесь со мной напрямую удобным способом:</p>
+            <p>Или свяжитесь напрямую:</p>
             <div class="direct-buttons-row">
               <a href="tel:+79656809898" class="direct-btn" data-contact="phone-link">
                 <svg viewBox="0 0 24 24" fill="#eb5a14"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                <span>8 965 680 98 98</span>
+                <span>Позвонить</span>
               </a>
 
               <a href="https://vk.com/tatiana_vas_realtor_monolit" class="direct-btn" data-social="vk" target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" fill="#0077ff"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.38 13.91c-.48.65-1.28.99-1.92.99-.44 0-.82-.16-1.12-.39-.46-.35-.87-.85-1.33-1.4-.33-.4-.68-.82-1.02-.82-.23 0-.37.16-.51.48-.19.45-.37 1.07-.46 1.41-.12.42-.32.65-.63.71-.16.03-.36.05-.59.05-1.42 0-2.88-.93-4.11-2.61-1.57-2.16-2.67-4.9-2.73-5.07-.08-.24-.04-.45.1-.6.13-.15.35-.23.63-.23h1.83c.4 0 .68.18.84.52.4 1.05 1.05 2.5 1.7 3.36.21.28.39.42.54.42.12 0 .2-.09.26-.29.13-.48.2-1.3.2-1.98 0-1.15-.22-1.48-.84-1.62-.22-.05-.33-.19-.33-.35 0-.17.15-.36.42-.47.45-.18 1.15-.25 1.83-.25.96 0 1.25.13 1.48.43.24.31.23.94.23 1.76 0 .58 0 1.15.06 1.42.08.34.22.46.36.46.12 0 .28-.11.49-.37.7-.85 1.4-2.48 1.63-3.37.09-.34.34-.54.72-.54h1.93c.33 0 .58.11.7.3.11.19.1.43-.03.73-.39.88-1.24 2.45-1.78 3.19-.24.33-.3.49-.3.63 0 .12.08.28.25.5.42.54.98 1.15 1.47 1.76.54.67.75 1.1.66 1.42-.09.32-.42.5-.94.5h-.06z"/></svg>
-                <span>Написать в VK</span>
+                <span>ВКонтакте</span>
               </a>
 
               <a href="https://max.ru/89656809898" class="direct-btn" data-social="max" target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" fill="#12367d"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.06.63 3.98 1.71 5.57L2.4 21.6c-.15.46.26.87.72.72l4.03-1.31C8.74 21.6 10.33 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 13c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
-                <span>Написать в MAX</span>
+                <span>MAX</span>
               </a>
             </div>
           </div>
