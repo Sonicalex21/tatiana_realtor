@@ -9,39 +9,43 @@
 
 ```
 c:\Визитка Татьяна Г\
-├── business-card/                          # Файлы цифровой визитки
-│   ├── card-horizontal.html                # Исходный адаптивный макет 1536x1024
-│   ├── card-vertical.html                  # Исходный адаптивный макет 1080x1350
-│   ├── generate_cards.py                   # Автоматический скрипт перерендеринга
-│   └── dist/                               # ГОТОВЫЕ ЭКСПОРТИРОВАННЫЕ ВИЗИТКИ
-│       ├── business-card-horizontal-1536x1024.png
-│       ├── business-card-horizontal-1536x1024.jpg
-│       ├── business-card-vertical-1080x1350.png
-│       └── business-card-vertical-1080x1350.jpg
+├── business-card/
+│   ├── card-pdf.html                       # Шаблон для сборки интерактивного PDF
+│   └── dist/
+│       └── card-interactive.pdf           # Интерактивная PDF-визитка с активными ссылками
 │
 ├── assets/
-│   ├── images/                             # Оптимизированные графические ассеты
+│   ├── images/                             # Графические ассеты
 │   │   ├── logo_monolit_clean.png          # Официальный логотип АН «Монолит»
-│   │   ├── tatyana_scaled.png              # Портрет Татьяны (без рук в кадре)
-│   │   ├── building_bg.jpg                 # Архитектурный фон
+│   │   ├── tatyana_official.jpg            # Официальный портрет Татьяны
+│   │   ├── business_card_clickable.jpg     # Оригинал визитки для онлайн-карточки
 │   │   └── og-image.jpg                    # Превью для соцсетей (Open Graph)
+│   ├── contacts/
+│   │   └── tatyana_vasileva.vcf            # vCard для сохранения в контакты смартфона
 │   └── icons/                              # Векторные SVG иконки
 │       ├── vk.svg                          # ВКонтакте
 │       ├── max.svg                         # Мессенджер MAX
-│       ├── instagram.svg                   # Instagram (только на сайте)
+│       ├── instagram.svg                   # Instagram
 │       ├── phone.svg                       # Телефон
 │       └── house-engineer.svg              # Иконка дома «Инженерный подход»
 │
-├── index.html                              # Главная страница персонального сайта
+├── index.html                              # Главная страница сайта (лендинг)
+├── card.html                               # Интерактивная цифровая веб-визитка
 ├── style.css                               # Фирменные стили АН «Монолит»
-├── app.js                                  # Интерактивный функционал и лидогенерация
+├── app.js                                  # Интерактивный функционал и обработка заявок
 ├── site-config.js                          # Единый файл настроек контактов и ссылок
 └── README.md                               # Документация проекта
 ```
 
 ---
 
-## 📇 Цифровая визитка (2 формата)
+## 🌐 Ссылки на опубликованный проект
+
+- **Персональный сайт-лендинг:** [https://sonicalex21.github.io/tatiana_realtor/](https://sonicalex21.github.io/tatiana_realtor/)
+  - Короткая ссылка (Яндекс): `https://clck.ru/3Woau4`
+- **Интерактивная цифровая веб-визитка:** [https://sonicalex21.github.io/tatiana_realtor/card.html](https://sonicalex21.github.io/tatiana_realtor/card.html)
+  - Короткая ссылка (Яндекс): `https://clck.ru/3Woau9`
+- **Интерактивная PDF-визитка:** [card-interactive.pdf](https://sonicalex21.github.io/tatiana_realtor/business-card/dist/card-interactive.pdf)
 
 В папке `business-card/dist/` подготовлены 4 готовых файла:
 
