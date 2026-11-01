@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Электронная визитка — Васильева Татьяна</title>
+  <style>
+    @page {
+      size: 1024px 682px;
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 1024px;
+      height: 682px;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .card-container {
+      position: relative;
+      width: 1024px;
+      height: 682px;
+    }
+    .card-img {
+      width: 1024px;
+      height: 682px;
+      display: block;
+      pointer-events: none;
+    }
+    /* Интерактивные кликабельные зоны */
+    .hotspot {
+      position: absolute;
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    /* Вся визитка ведет на персональный сайт Татьяны */
+    .hotspot-site {
+      top: 0;
+      left: 0;
+      width: 1024px;
+      height: 682px;
+      z-index: 1;
+    }
+    /* Зона клика по номеру телефона (звонок) */
+    .hotspot-phone {
+      top: 530px;
+      right: 25px;
+      width: 400px;
+      height: 62px;
+      border-radius: 35px;
+      z-index: 10;
+    }
+    /* Зона клика по мессенджеру MAX */
+    .hotspot-max {
+      top: 605px;
+      right: 175px;
+      width: 120px;
+      height: 45px;
+      z-index: 10;
+    }
+    /* Зона клика по ВКонтакте */
+    .hotspot-vk {
+      top: 605px;
+      right: 25px;
+      width: 110px;
+      height: 45px;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <img src="../assets/images/business_card_clickable.jpg" class="card-img" alt="Визитка Татьяны Васильевой">
+    
+    <!-- Главная ссылка: клик в любое место визитки ведет на сайт -->
+    <a href="https://монолит-чебоксары.рф/tatyana-vasileva" class="hotspot hotspot-site" title="Перейти на персональный сайт Татьяны Васильевой" target="_blank"></a>
+
+    <!-- Быстрый прямой звонок -->
+    <a href="tel:+79656809898" class="hotspot hotspot-phone" title="Позвонить: 8 965 680 98 98"></a>
+
+    <!-- Переход в MAX -->
+    <a href="https://max.ru/89656809898" class="hotspot hotspot-max" title="Написать в мессенджере MAX" target="_blank"></a>
+
+    <!-- Переход в VK -->
+    <a href="https://vk.com/tatiana_vas_realtor_monolit" class="hotspot hotspot-vk" title="Открыть профиль ВКонтакте" target="_blank"></a>
+  </div>
+</body>
+</html>
