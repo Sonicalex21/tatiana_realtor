@@ -59,5 +59,5 @@ window.SITE_CONFIG = {
   },
 
   // Постоянный канонический адрес страницы риелтора
-  canonicalUrl: "https://монолит-чебоксары.рф/tatyana-vasileva"
+  canonicalUrl: "https://sonicalex21.github.io/tatiana_realtor/"
 };
