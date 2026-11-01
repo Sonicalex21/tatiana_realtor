@@ -400,20 +400,46 @@ function showSuccessModal(modal) {
 
 /**
  * Умное поведение верхней шапки при скроллинге (на ноутбуке, планшете и смартфоне):
- * - При активном листании (вниз/вверх) шапка плавно исчезает, не загораживая обзор
- * - Автоматически исчезает через 2 секунды бездействия
- * - Появляется обратно при малейшем прикосновении: движении мыши, таче, колесике, клавиатуре
- * - В самом верху страницы (scrollY <= 50) всегда зафиксирована и видна
+ * Шапка скрывается и появляется ТОЛЬКО В НУЖНЫЙ МОМЕНТ:
+ * 1. Листание вниз -> скрывается (не загораживает экран и текст)
+ * 2. Листание вверх -> появляется (жест возврата к меню/контактам)
+ * 3. Подведение курсора к верхнему краю экрана (Y <= 60px) -> плавно появляется
+ * 4. Наведение мыши на саму шапку -> остается открытой
+ * 5. Бездействие 2.5 сек -> плавно скрывается
+ * 6. В самом верху страницы (scrollY <= 50px) -> всегда видна
  */
 function initHeaderScroll() {
   const header = document.querySelector('.site-header');
   if (!header) return;
 
+  let lastScrollY = window.scrollY;
   let idleTimer = null;
-  let scrollStopTimer = null;
   let isMouseOverHeader = false;
+  let isNearTopEdge = false;
 
-  // Если курсор находится непосредственно на шапке — не скрывать ее
+  function showHeader() {
+    header.classList.remove('header-hidden');
+  }
+
+  function hideHeader() {
+    // Никогда не скрывать, если:
+    // - пользователь в самом верху страницы
+    // - курсор наведен на шапку
+    // - курсор подведен к верхнему краю экрана
+    if (window.scrollY <= 50 || isMouseOverHeader || isNearTopEdge) return;
+    header.classList.add('header-hidden');
+  }
+
+  function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    if (window.scrollY > 50 && !isMouseOverHeader && !isNearTopEdge) {
+      idleTimer = setTimeout(() => {
+        hideHeader();
+      }, 2500); // 2.5 секунды бездействия
+    }
+  }
+
+  // Наведение курсора непосредственно на шапку
   header.addEventListener('mouseenter', () => {
     isMouseOverHeader = true;
     showHeader();
@@ -425,28 +451,24 @@ function initHeaderScroll() {
     resetIdleTimer();
   });
 
-  function showHeader() {
-    header.classList.remove('header-hidden');
-  }
-
-  function hideHeader() {
-    // В самом верху страницы или при наведенном курсоре шапка не скрывается
-    if (window.scrollY <= 50 || isMouseOverHeader) return;
-    header.classList.add('header-hidden');
-  }
-
-  function resetIdleTimer() {
-    clearTimeout(idleTimer);
-    if (window.scrollY > 50 && !isMouseOverHeader) {
-      idleTimer = setTimeout(() => {
-        hideHeader();
-      }, 2000); // Ровно 2 секунды бездействия
+  // Нужный момент: подведение курсора к верхнему краю экрана (Y <= 60px)
+  window.addEventListener('mousemove', (e) => {
+    if (e.clientY <= 60) {
+      isNearTopEdge = true;
+      showHeader();
+      clearTimeout(idleTimer);
+    } else {
+      if (isNearTopEdge) {
+        isNearTopEdge = false;
+        resetIdleTimer();
+      }
     }
-  }
+  }, { passive: true });
 
-  // Скроллинг: переключение тени, скрытие при активном листании и показ при остановке
+  // Скроллинг: скролл вниз скрывает, скролл вверх показывает
   window.addEventListener('scroll', () => {
     const currentY = window.scrollY;
+    const scrollDiff = currentY - lastScrollY;
 
     // Стили тени / фона шапки
     if (currentY > 40) {
@@ -455,43 +477,26 @@ function initHeaderScroll() {
       header.classList.remove('scrolled');
     }
 
-    // В самом верху страницы шапка всегда видна
+    // В самом верху страницы шапка всегда зафиксирована и видна
     if (currentY <= 50) {
       showHeader();
       clearTimeout(idleTimer);
-      clearTimeout(scrollStopTimer);
+      lastScrollY = currentY;
       return;
     }
 
-    // При активном листании (скролле вниз или вверх) скрываем шапку
-    hideHeader();
-    clearTimeout(idleTimer);
-
-    // Как только листание остановилось — шапка появляется и запускается таймер на 2 сек
-    clearTimeout(scrollStopTimer);
-    scrollStopTimer = setTimeout(() => {
+    // При листании вниз (скролл к контенту) — скрываем шапку
+    if (scrollDiff > 6) {
+      hideHeader();
+      clearTimeout(idleTimer);
+    } 
+    // Нужный момент: листание вверх (жест навигации/возврата) — плавно показываем
+    else if (scrollDiff < -6) {
       showHeader();
       resetIdleTimer();
-    }, 120);
-  }, { passive: true });
-
-  // Малейшее прикосновение: движение курсора, тач, колесико, клавиша
-  const touchEvents = ['mousemove', 'pointermove', 'touchstart', 'touchmove', 'wheel', 'keydown'];
-  touchEvents.forEach(evt => {
-    window.addEventListener(evt, () => {
-      if (window.scrollY > 50) {
-        showHeader();
-        resetIdleTimer();
-      }
-    }, { passive: true });
-  });
-
-  // Верхняя зона экрана: если курсор подведен к верхнему краю (Y <= 65px), открываем шапку
-  window.addEventListener('mousemove', (e) => {
-    if (e.clientY <= 65 && window.scrollY > 50) {
-      showHeader();
-      clearTimeout(idleTimer);
     }
+
+    lastScrollY = currentY;
   }, { passive: true });
 }
 
