@@ -399,13 +399,13 @@ function showSuccessModal(modal) {
 }
 
 /**
- * Умное поведение верхней шапки при скроллинге (версия для ноутбука и мобильных):
- * - При скроллинге вниз шапка скрывается, освобождая обзор
- * - При скроллинге вверх шапка мгновенно появляется
- * - Время бездействия: ровно 2 секунды, после чего шапка плавно скрывается
- * - Подведение курсора к верхнему краю экрана (Y <= 60px) также раскрывает шапку
- * - Наведение на саму шапку держит ее открытой
- * - В самом верху страницы (scrollY <= 50px) всегда зафиксирована и видна
+ * Умное поведение верхней шапки при скроллинге:
+ * - При скроллинге вниз (scrollDiff > 6 / deltaY > 10) шапка плавно скрывается
+ * - При скроллинге вверх (scrollDiff < 0 / deltaY < 0 / свайп вверх / стрелка вверх) шапка мгновенно появляется
+ * - Защита от дребезга тачпада: микро-отскоки после скролла вверх не скрывают шапку
+ * - Время бездействия: 2 секунды, после чего шапка мягко скрывается
+ * - Подведение курсора к верхнему краю экрана (Y <= 90px) или наведение на шапку раскрывает её и держит открытой
+ * - В самом верху страницы (scrollY <= 50px) всегда видна и зафиксирована
  */
 function initHeaderScroll() {
   const header = document.querySelector('.site-header');
@@ -415,6 +415,7 @@ function initHeaderScroll() {
   let idleTimer = null;
   let isMouseOverHeader = false;
   let isNearTopEdge = false;
+  let lastScrollUpTime = 0;
 
   function showHeader() {
     header.classList.remove('header-hidden');
@@ -424,8 +425,10 @@ function initHeaderScroll() {
     // Никогда не скрывать, если:
     // - пользователь в самом верху страницы
     // - курсор наведен на шапку
-    // - курсор подведен к верхнему краю экрана
+    // - курсор подведен к верхней области экрана
+    // - только что был жест скролла вверх (защита от дребезга тачпада 350мс)
     if (window.scrollY <= 50 || isMouseOverHeader || isNearTopEdge) return;
+    if (Date.now() - lastScrollUpTime < 350) return;
     header.classList.add('header-hidden');
   }
 
@@ -436,6 +439,18 @@ function initHeaderScroll() {
         hideHeader();
       }, 2000); // Ровно 2 секунды бездействия по ТЗ
     }
+  }
+
+  function onScrollUp() {
+    lastScrollUpTime = Date.now();
+    showHeader();
+    resetIdleTimer();
+  }
+
+  function onScrollDown() {
+    if (Date.now() - lastScrollUpTime < 350) return;
+    hideHeader();
+    clearTimeout(idleTimer);
   }
 
   // Наведение курсора непосредственно на шапку
@@ -450,9 +465,9 @@ function initHeaderScroll() {
     resetIdleTimer();
   });
 
-  // Нужный момент: подведение курсора к верхнему краю экрана (Y <= 60px)
+  // Подведение курсора к верхнему краю экрана (Y <= 90px)
   window.addEventListener('mousemove', (e) => {
-    if (e.clientY <= 60) {
+    if (e.clientY <= 90) {
       isNearTopEdge = true;
       showHeader();
       clearTimeout(idleTimer);
@@ -464,22 +479,53 @@ function initHeaderScroll() {
     }
   }, { passive: true });
 
-  // Мгновенная реакция на колесико/тачпад ноутбука (wheel)
+  // Мгновенная реакция на колесико / тачпад ноутбука (wheel)
   window.addEventListener('wheel', (e) => {
-    if (window.scrollY <= 50) return;
-
-    if (e.deltaY < -2) {
-      // Скроллинг колесиком/тачпадом ВВЕРХ — шапка появляется сразу
+    if (window.scrollY <= 50) {
       showHeader();
-      resetIdleTimer();
-    } else if (e.deltaY > 6) {
+      return;
+    }
+
+    if (e.deltaY < 0) {
+      // Скроллинг колесиком/тачпадом ВВЕРХ — шапка появляется мгновенно
+      onScrollUp();
+    } else if (e.deltaY > 10) {
       // Скроллинг ВНИЗ — скрывается
-      hideHeader();
-      clearTimeout(idleTimer);
+      onScrollDown();
     }
   }, { passive: true });
 
-  // Скроллинг страницы
+  // Тач-события для мобильных и сенсорных экранов ноутбуков
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches[0]) {
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches[0]) {
+      const touchY = e.touches[0].clientY;
+      const diff = touchY - touchStartY; // > 0 тянут вниз = скролл вверх!
+      if (diff > 4) {
+        onScrollUp();
+      } else if (diff < -10) {
+        onScrollDown();
+      }
+      touchStartY = touchY;
+    }
+  }, { passive: true });
+
+  // Клавиатурная навигация (стрелка вверх, PageUp, Home)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'Home') {
+      onScrollUp();
+    } else if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'End') {
+      onScrollDown();
+    }
+  });
+
+  // Основной скроллинг страницы
   window.addEventListener('scroll', () => {
     const currentY = window.scrollY;
     const scrollDiff = currentY - lastScrollY;
@@ -499,15 +545,13 @@ function initHeaderScroll() {
       return;
     }
 
-    // При скроллинге ВНИЗ — скрываем шапку
-    if (scrollDiff > 4) {
-      hideHeader();
-      clearTimeout(idleTimer);
+    // При скроллинге ВВЕРХ (любая отрицательная разница) — шапка появляется сразу
+    if (scrollDiff < 0) {
+      onScrollUp();
     } 
-    // При скроллинге ВВЕРХ — шапка появляется и запускается таймер на 2 секунды
-    else if (scrollDiff < -2) {
-      showHeader();
-      resetIdleTimer();
+    // При скроллинге ВНИЗ — скрываем шапку
+    else if (scrollDiff > 6) {
+      onScrollDown();
     }
 
     lastScrollY = currentY;
