@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 7. Локальный реестр лидов (Lead Ledger) для тестирования и выгрузки
   initLeadLedgerAdmin();
+
+  // 8. Умное скрытие плавающей панели связи (при скролле вниз и бездействии 1.5 сек)
+  initFloatingBarBehavior();
 });
 
 /**
@@ -448,4 +451,59 @@ function openLeadLedger() {
     downloadAnchor.click();
     downloadAnchor.remove();
   }
+}
+
+/**
+ * Умное поведение нижней плавающей панели связи:
+ * - Скрывается при скролле вниз (чтобы не загораживать контент)
+ * - Показывается при скролле вверх или при касании
+ * - Автоматически скрывается при бездействии пользователя более 1.5 секунд
+ */
+function initFloatingBarBehavior() {
+  const bar = document.querySelector('.floating-mobile-bar');
+  if (!bar) return;
+
+  let lastScrollY = window.scrollY;
+  let idleTimer = null;
+
+  function showBar() {
+    bar.classList.remove('bar-hidden');
+  }
+
+  function hideBar() {
+    bar.classList.add('bar-hidden');
+  }
+
+  function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      hideBar();
+    }, 1500); // 1.5 секунды бездействия
+  }
+
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+
+    // Скролл вниз (дальше 60px от верха) — прячем сразу
+    if (currentScrollY > lastScrollY && currentScrollY > 60) {
+      hideBar();
+      clearTimeout(idleTimer);
+    } else if (currentScrollY < lastScrollY) {
+      // Скролл вверх — показываем и перезапускаем таймер на 1.5 сек
+      showBar();
+      resetIdleTimer();
+    }
+    lastScrollY = currentScrollY;
+  }, { passive: true });
+
+  // Любое касание экрана или клик снова показывает панель и перезапускает таймер
+  ['touchstart', 'touchmove', 'click', 'pointerdown'].forEach(evt => {
+    window.addEventListener(evt, () => {
+      showBar();
+      resetIdleTimer();
+    }, { passive: true });
+  });
+
+  // Запуск таймера при старте страницы
+  resetIdleTimer();
 }
