@@ -159,21 +159,27 @@ function initLeadForm(config) {
     const serviceType = typeInput ? typeInput.value : 'Консультация';
     const comment = commentInput ? commentInput.value.trim() : '';
 
+    [nameInput, phoneInput].forEach(inp => inp && inp.classList.remove('input-error'));
+
     if (!name) {
-      alert('Пожалуйста, укажите Ваше имя.');
-      if (nameInput) nameInput.focus();
+      if (nameInput) {
+        nameInput.classList.add('input-error');
+        nameInput.focus();
+      }
       return;
     }
 
     const digitsOnly = phone.replace(/\D/g, '');
     if (digitsOnly.length < 11) {
-      alert('Пожалуйста, введите корректный номер телефона (11 цифр).');
-      if (phoneInput) phoneInput.focus();
+      if (phoneInput) {
+        phoneInput.classList.add('input-error');
+        phoneInput.focus();
+      }
       return;
     }
 
     if (policyCheck && !policyCheck.checked) {
-      alert('Пожалуйста, подтвердите согласие на обработку персональных данных.');
+      if (policyCheck) policyCheck.focus();
       return;
     }
 
@@ -409,7 +415,7 @@ function initHeaderScroll() {
 }
 
 /**
- * Реестр лидов (нажмите Ctrl + Shift + L или кликните по служебной ссылке в футере)
+ * Реестр лидов (для администратора: скрытая комбинация клавиш Ctrl + Shift + L)
  */
 function initLeadLedgerAdmin() {
   window.addEventListener('keydown', (e) => {
@@ -425,12 +431,20 @@ function initLeadLedgerAdmin() {
       openLeadLedger();
     });
   }
+
+  // Снятие подсветки ошибок при вводе
+  ['client-name', 'client-phone'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', () => el.classList.remove('input-error'));
+    }
+  });
 }
 
 function openLeadLedger() {
   const leads = JSON.parse(localStorage.getItem('monolit_leads') || '[]');
   if (leads.length === 0) {
-    alert('Реестр заявок пуст. Оставьте тестовую заявку через форму на сайте!');
+    alert('В локальном хранилище этого браузера пока нет сохранённых заявок.\nВсе поступающие с сайта заявки отправляются напрямую на почту tana15111977@gmail.com.');
     return;
   }
 
