@@ -16,7 +16,7 @@ window.SITE_CONFIG = {
     positioning: "Риелтор с инженерным подходом",
     phoneDisplay: "8 965 680 98 98",
     phoneTel: "+79656809898",
-    email: "tana15111977@gmail.com",
+    email: "tana3105@mail.ru",
     workRegion: "Чебоксары, Новочебоксарск и Чувашская Республика"
   },
 
@@ -37,7 +37,7 @@ window.SITE_CONFIG = {
     // 1. Надежная отправка на Email риелтора через защищенный закрытый вебхук-шлюз
     email: {
       enabled: true,
-      recipientEmail: "tana15111977@gmail.com" // Почта Татьяны для приема заявок
+      recipientEmail: "tana3105@mail.ru" // Почта Татьяны для приема заявок
     },
 
     // 2. Внешний закрытый Webhook (для прямой интеграции с CRM или защищенным бэкендом)

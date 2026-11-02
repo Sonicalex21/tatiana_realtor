@@ -2379,3 +2379,74 @@ button {
     display: none;
   }
 }
+
+/* ==========================================================================
+   ДВУСТОРОННЕЕ ПОЗИЦИОНИРОВАНИЕ (ПОКУПАТЕЛЯМ И ПРОДАВЦАМ)
+   ========================================================================== */
+.hero-dual-positioning {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0 22px;
+}
+
+.dual-pos-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 12px rgba(18, 54, 125, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dual-pos-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(18, 54, 125, 0.1);
+}
+
+.dual-pos-card.buyer {
+  border-left: 4px solid var(--color-navy);
+}
+
+.dual-pos-card.seller {
+  border-left: 4px solid var(--color-orange);
+}
+
+.dual-pos-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+
+.dual-pos-card.buyer .dual-pos-tag {
+  color: var(--color-navy);
+}
+
+.dual-pos-card.seller .dual-pos-tag {
+  color: var(--color-orange);
+}
+
+.dual-pos-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  margin-bottom: 4px;
+  line-height: 1.25;
+}
+
+.dual-pos-desc {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.35;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .hero-dual-positioning {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

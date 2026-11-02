@@ -223,7 +223,7 @@ function initLeadForm(config) {
       // 1. Локальное сохранение копии заявки
       saveLeadToStorage(leadData);
 
-      // 2. Отправка на Email риелтора (tana15111977@gmail.com)
+      // 2. Отправка на Email риелтора (tana3105@mail.ru)
       const emailConfig = config.leadSettings?.email;
       if (emailConfig?.enabled) {
         await sendEmailNotification(emailConfig, leadData);
@@ -279,7 +279,7 @@ function saveLeadToStorage(lead) {
  * Отправка сообщения на Email риелтора через защищенный шлюз
  */
 async function sendEmailNotification(emailConfig, lead) {
-  const email = emailConfig.recipientEmail || "tana15111977@gmail.com";
+  const email = emailConfig.recipientEmail || "tana3105@mail.ru";
 
   const formSubmitPayload = {
     "Имя клиента": lead.name,
@@ -522,7 +522,7 @@ function initLeadLedgerAdmin() {
 function openLeadLedger() {
   const leads = JSON.parse(localStorage.getItem('monolit_leads') || '[]');
   if (leads.length === 0) {
-    alert('В локальном хранилище этого браузера пока нет сохранённых заявок.\nВсе поступающие с сайта заявки отправляются напрямую на почту tana15111977@gmail.com.');
+    alert('В локальном хранилище этого браузера пока нет сохранённых заявок.\nВсе поступающие с сайта заявки отправляются напрямую на почту tana3105@mail.ru.');
     return;
   }
 
