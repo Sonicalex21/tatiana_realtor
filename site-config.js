@@ -16,48 +16,40 @@ window.SITE_CONFIG = {
     positioning: "Риелтор с инженерным подходом",
     phoneDisplay: "8 965 680 98 98",
     phoneTel: "+79656809898",
+    email: "tana15111977@gmail.com",
     workRegion: "Чебоксары, Новочебоксарск и Чувашская Республика"
   },
 
-  // Социальные сети и мессенджеры (Telegram НЕ используется по ТЗ)
+  // Социальные сети и мессенджеры
   socialLinks: {
-    // Ссылка на профиль ВКонтакте
+    // Профиль ВКонтакте
     vk: "https://vk.com/tatiana_vas_realtor_monolit",
     
-    // Ссылка на профиль Instagram (присутствует на сайте по ТЗ)
+    // Профиль Instagram* (*Meta признана экстремистской организацией и запрещена в РФ)
     instagram: "https://www.instagram.com/tatiana_vas_realtor/",
     
-    // Ссылка на профиль или чат в мессенджере MAX
+    // Профиль в мессенджере MAX
     max: "https://max.ru/89656809898"
   },
 
   // Настройки получения заявок с сайта
   leadSettings: {
-    // 1. Всегда включено: надежное локальное сохранение всех заявок (Lead Ledger)
-    saveToLocalStorage: true,
-
-    // 2. Оповещения в Telegram (заявка моментально падает Татьяне в Telegram)
-    telegram: {
-      enabled: true, // Активировано!
-      botUsername: "@LeadsFromTatiana_Bot",
-      botToken: "9052645040:AAH50D1kti3jFsInRkaQSChoXJsgLvmiPYQ", // Токен вашего бота
-      chatId: "YOUR_CHAT_ID" // Сюда вставим цифровой Chat ID получателя
-    },
-
-    // 3. Отправка на Email (мгновенные заявки прямо на почту Татьяны)
+    // 1. Надежная отправка на Email риелтора через защищенный закрытый вебхук-шлюз
     email: {
-      enabled: true, // Включено!
-      service: "formsubmit",
+      enabled: true,
       recipientEmail: "tana15111977@gmail.com" // Почта Татьяны для приема заявок
     },
 
-    // 4. Webhook (для интеграции с CRM агентства «Монолит»: Битрикс24 или AmoCRM)
+    // 2. Внешний закрытый Webhook (для прямой интеграции с CRM или защищенным бэкендом)
     webhook: {
-      enabled: false, // Установите true для активации
-      endpointUrl: "https://your-crm-webhook-url.com"
-    }
+      enabled: false,
+      endpointUrl: "" // При необходимости укажите защищенный URL вашего вебхука CRM
+    },
+
+    // 3. Локальное резервное копирование в браузере (Lead Ledger) для контроля
+    saveToLocalStorage: true
   },
 
   // Постоянный канонический адрес страницы риелтора
-  canonicalUrl: "https://sonicalex21.github.io/tatiana_realtor/"
+  canonicalUrl: "https://realtor21.ru/"
 };

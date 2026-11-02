@@ -762,6 +762,39 @@ button {
   margin: 0 auto;
 }
 
+.engineering-disclaimer-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-left: 3px solid var(--color-orange);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  max-width: 760px;
+  margin: 18px auto 0;
+  text-align: left;
+  backdrop-filter: blur(8px);
+}
+
+.eng-disclaimer-icon {
+  flex-shrink: 0;
+  color: var(--color-orange);
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.eng-disclaimer-text {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.eng-disclaimer-text strong {
+  color: #ffffff;
+}
+
 .engineering-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1166,6 +1199,16 @@ button {
   transition: var(--transition);
 }
 
+.form-policy-check a {
+  color: var(--color-navy);
+  text-decoration: underline;
+  transition: var(--transition);
+}
+
+.form-policy-check a:hover {
+  color: var(--color-orange);
+}
+
 .form-policy-check.input-error label {
   color: #ef4444 !important;
 }
@@ -1412,11 +1455,50 @@ button {
   padding-top: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   font-size: 12px;
   color: #64748b;
+  gap: 8px;
+}
+
+.footer-legal-block {
+  width: 100%;
+  text-align: center;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.footer-legal-block strong {
+  color: #cbd5e1;
+}
+
+.footer-legal-block a {
+  color: #e2e8f0;
+  text-decoration: underline;
+}
+
+.footer-legal-block a:hover {
+  color: var(--color-orange);
+}
+
+.footer-meta-disclaimer {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.footer-policy-link {
+  color: #94a3b8;
+  text-decoration: underline;
+}
+
+.footer-policy-link:hover {
+  color: var(--color-white);
 }
 
 /* ==========================================================================
@@ -1877,6 +1959,17 @@ button {
   .fact-content p {
     font-size: 12.5px;
     line-height: 1.4;
+  }
+
+  .engineering-disclaimer-card {
+    padding: 10px 14px;
+    margin: 14px auto 0;
+    gap: 10px;
+  }
+
+  .eng-disclaimer-text {
+    font-size: 11.5px;
+    line-height: 1.45;
   }
 
   /* Секция «Инженерный подход» — горизонтальный свайп-слайдер (snap-scroll) */

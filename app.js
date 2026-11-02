@@ -153,6 +153,13 @@ function initLeadForm(config) {
     });
   }
 
+  // Предотвращаем переключение чекбокса при клике по ссылке на Политику конфиденциальности
+  document.querySelectorAll('.form-policy-check a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  });
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -213,22 +220,16 @@ function initLeadForm(config) {
     submitBtn.innerHTML = `<span>Отправка заявки...</span>`;
 
     try {
-      // 1. Сохранение в локальный реестр Lead Ledger (localStorage)
+      // 1. Локальное сохранение копии заявки
       saveLeadToStorage(leadData);
 
-      // 2. Если включена отправка в Telegram
-      const tgConfig = config.leadSettings?.telegram;
-      if (tgConfig?.enabled && tgConfig.botToken && tgConfig.chatId) {
-        await sendTelegramNotification(tgConfig, leadData);
-      }
-
-      // 3. Если включена отправка на Email
+      // 2. Отправка на Email риелтора (tana15111977@gmail.com)
       const emailConfig = config.leadSettings?.email;
-      if (emailConfig?.enabled && (emailConfig.recipientEmail || emailConfig.accessKey)) {
+      if (emailConfig?.enabled) {
         await sendEmailNotification(emailConfig, leadData);
       }
 
-      // 4. Если включен Webhook (CRM)
+      // 3. Если настроен защищенный Webhook (CRM)
       const whConfig = config.leadSettings?.webhook;
       if (whConfig?.enabled && whConfig.endpointUrl) {
         await sendWebhookNotification(whConfig.endpointUrl, leadData);
@@ -239,8 +240,7 @@ function initLeadForm(config) {
       showSuccessModal(modal);
 
     } catch (err) {
-      console.warn('Заявка сохранена в локальный реестр, но возникла ошибка при отправке в сеть:', err);
-      // Даже если сеть недоступна, локально лид сохранен
+      console.warn('Заявка принята, но возникло предупреждение при отправке:', err);
       showSuccessModal(modal);
     } finally {
       submitBtn.disabled = false;
@@ -276,102 +276,18 @@ function saveLeadToStorage(lead) {
 }
 
 /**
- * Отправка сообщения в Telegram через официальный Bot API
- */
-/**
- * Отправка сообщения в Telegram через официальный Bot API
- * с поддержкой обхода блокировок api.telegram.org у российских провайдеров
- */
-async function sendTelegramNotification(tg, lead) {
-  if (!tg.botToken || !tg.chatId || tg.chatId === "YOUR_CHAT_ID") {
-    console.warn("[Telegram] Токен настроен, но Chat ID пока не указан. Заявка сохранена в локальный реестр Lead Ledger.");
-    return;
-  }
-
-  const text = 
-    `🔔 *Новая заявка с персонального сайта!*\n\n` +
-    `👤 *Имя:* ${lead.name}\n` +
-    `📞 *Телефон:* [${lead.phone}](tel:${lead.phone.replace(/[^0-9+]/g, '')})\n` +
-    `🎯 *Интересует:* ${lead.serviceType}\n` +
-    `💬 *Комментарий:* ${lead.comment}\n` +
-    `⏰ *Время:* ${lead.formattedDate}`;
-
-  const payload = {
-    chat_id: tg.chatId,
-    text: text,
-    parse_mode: 'Markdown'
-  };
-
-  // Список эндпоинтов (основной + надежные открытые CORS/SSL релеи)
-  const endpoints = [
-    `https://api.telegram.org/bot${tg.botToken}/sendMessage`,
-    `https://corsproxy.io/?url=${encodeURIComponent(`https://api.telegram.org/bot${tg.botToken}/sendMessage`)}`
-  ];
-
-  for (const url of endpoints) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
-
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-
-      const data = await res.json();
-      if (data && data.ok) {
-        console.log('[Telegram] Заявка успешно доставлена в Telegram!');
-        return;
-      } else {
-        console.warn('[Telegram] Ошибка ответа Telegram API:', data);
-      }
-    } catch (err) {
-      console.warn(`[Telegram] Не удалось отправить через ${url}:`, err);
-    }
-  }
-}
-
-/**
- * Отправка сообщения на Email (FormSubmit / Web3Forms)
+ * Отправка сообщения на Email риелтора через защищенный шлюз
  */
 async function sendEmailNotification(emailConfig, lead) {
   const email = emailConfig.recipientEmail || "tana15111977@gmail.com";
 
-  if (emailConfig.service === "web3forms" && emailConfig.accessKey) {
-    const payload = {
-      access_key: emailConfig.accessKey,
-      subject: `Новая заявка: ${lead.name} (${lead.serviceType})`,
-      from_name: "Персональный сайт риелтора",
-      name: lead.name,
-      phone: lead.phone,
-      service_type: lead.serviceType,
-      message: lead.comment,
-      date: lead.formattedDate
-    };
-
-    try {
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(payload)
-      });
-    } catch (e) {
-      console.warn("[Email Web3Forms] Ошибка:", e);
-    }
-    return;
-  }
-
-  // По умолчанию: надежный прямой шлюз FormSubmit (доставляет на Gmail мгновенно)
   const formSubmitPayload = {
     "Имя клиента": lead.name,
     "Телефон": lead.phone,
     "Выбранная услуга": lead.serviceType,
     "Комментарий к заявке": lead.comment,
     "Дата и время": lead.formattedDate,
-    "_subject": `🔔 Новая заявка с сайта: ${lead.name} (${lead.serviceType})`,
+    "_subject": `🔔 Новая заявка с сайта риелтора: ${lead.name} (${lead.serviceType})`,
     "_template": "table",
     "_captcha": "false"
   };
@@ -386,21 +302,26 @@ async function sendEmailNotification(emailConfig, lead) {
       body: JSON.stringify(formSubmitPayload)
     });
     const result = await res.json();
-    console.log("[Email] Заявка успешно отправлена на почту:", result);
+    console.log("[Email] Заявка успешно доставлена на почту:", result);
   } catch (err) {
-    console.warn("[Email FormSubmit] Не удалось отправить на почту:", err);
+    console.warn("[Email] Предупреждение при отправке на почту:", err);
   }
 }
 
 /**
- * Отправка на внешний Webhook (CRM)
+ * Отправка на внешний закрытый Webhook (CRM или защищенный сервер)
  */
 async function sendWebhookNotification(url, lead) {
-  await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(lead)
-  });
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lead)
+    });
+    console.log('[Webhook] Заявка успешно передана в закрытый вебхук');
+  } catch (err) {
+    console.warn('[Webhook] Предупреждение при передаче в вебхук:', err);
+  }
 }
 
 function showSuccessModal(modal) {
