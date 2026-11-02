@@ -1152,11 +1152,27 @@ button {
   margin-bottom: 20px;
   font-size: 12px;
   color: var(--color-text-muted);
+  transition: var(--transition);
 }
 
 .form-policy-check input {
   margin-top: 2px;
   accent-color: var(--color-orange);
+  cursor: pointer;
+}
+
+.form-policy-check label {
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.form-policy-check.input-error label {
+  color: #ef4444 !important;
+}
+
+.form-policy-check.input-error input {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
 }
 
 .btn-submit-lead {

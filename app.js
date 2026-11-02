@@ -143,6 +143,16 @@ function initLeadForm(config) {
 
   if (!form) return;
 
+  const policyCheckEl = document.getElementById('policy-check');
+  if (policyCheckEl) {
+    policyCheckEl.addEventListener('change', () => {
+      const container = policyCheckEl.closest('.form-policy-check');
+      if (container && policyCheckEl.checked) {
+        container.classList.remove('input-error');
+      }
+    });
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -159,7 +169,9 @@ function initLeadForm(config) {
     const serviceType = typeInput ? typeInput.value : 'Консультация';
     const comment = commentInput ? commentInput.value.trim() : '';
 
+    const policyContainer = policyCheck ? policyCheck.closest('.form-policy-check') : null;
     [nameInput, phoneInput].forEach(inp => inp && inp.classList.remove('input-error'));
+    if (policyContainer) policyContainer.classList.remove('input-error');
 
     if (!name) {
       if (nameInput) {
@@ -179,7 +191,8 @@ function initLeadForm(config) {
     }
 
     if (policyCheck && !policyCheck.checked) {
-      if (policyCheck) policyCheck.focus();
+      if (policyContainer) policyContainer.classList.add('input-error');
+      policyCheck.focus();
       return;
     }
 
